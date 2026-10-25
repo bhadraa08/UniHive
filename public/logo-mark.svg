@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" fill="none">
+  <!-- Outer subtle hexagon perimeter or connected nodes -->
+  <defs>
+    <linearGradient id="hiveG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#244B3B" />
+      <stop offset="100%" stop-color="#1B3A2E" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Left Cell -->
+  <path d="M14 10 L20 6.5 L26 10 L26 17 L20 20.5 L14 17 Z" stroke="#244B3B" stroke-width="2.2" stroke-linejoin="round" fill="none" opacity="0.35"/>
+  
+  <!-- Bottom Left Cell -->
+  <path d="M8 20.5 L14 17 L20 20.5 L20 27.5 L14 31 L8 27.5 Z" stroke="#244B3B" stroke-width="2.2" stroke-linejoin="round" fill="#244B3B" fill-opacity="0.08"/>
+  
+  <!-- Bottom Right Cell -->
+  <path d="M20 20.5 L26 17 L32 20.5 L32 27.5 L26 31 L20 27.5 Z" stroke="#244B3B" stroke-width="2.2" stroke-linejoin="round" fill="#244B3B" fill-opacity="0.12"/>
+  
+  <!-- Central interconnecting lines -->
+  <line x1="20" y1="6.5" x2="20" y2="20.5" stroke="#244B3B" stroke-width="2" stroke-linecap="round"/>
+  <line x1="8" y1="27.5" x2="20" y2="20.5" stroke="#244B3B" stroke-width="2" stroke-linecap="round"/>
+  <line x1="32" y1="27.5" x2="20" y2="20.5" stroke="#244B3B" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Interconnected nodes -->
+  <circle cx="20" cy="20.5" r="3.2" fill="#D8AC55" stroke="#FAF9F5" stroke-width="1.5" />
+  <circle cx="20" cy="6.5" r="2.2" fill="#244B3B" />
+  <circle cx="8" cy="27.5" r="2.2" fill="#244B3B" />
+  <circle cx="32" cy="27.5" r="2.2" fill="#244B3B" />
+  <circle cx="14" cy="17" r="1.8" fill="#A8B9A2" />
+  <circle cx="26" cy="17" r="1.8" fill="#A8B9A2" />
+  <circle cx="20" cy="27.5" r="1.8" fill="#A8B9A2" />
+</svg>

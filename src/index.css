@@ -1,0 +1,315 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --canvas: #F7F1E8;
+    --surface: #FFF9F2;
+    --surface-elevated: #FFFFFF;
+    --surface-subtle: #F3EAE0;
+    --sidebar-bg: #FFF9F2;
+    --text-primary: #302631;
+    --text-secondary: #817481;
+    --text-muted: #9E94A1;
+    --border: #E7DCD8;
+    --border-strong: #D9CCC6;
+
+    --lavender: #9674B8;
+    --accent: #9674B8;
+    --lavender-soft: rgba(150, 116, 184, 0.14);
+    --peach: #E9A68E;
+    --peach-soft: rgba(233, 166, 142, 0.16);
+    --sage: #9AB296;
+    --sage-soft: rgba(154, 178, 150, 0.16);
+    --plum: #302631;
+    --terracotta: #E9A68E;
+    --success: #9AB296;
+    --error: #C87878;
+  }
+
+  .dark {
+    --canvas: #191420;
+    --sidebar-bg: #21192B;
+    --surface: #251D30;
+    --surface-elevated: #30253C;
+    --surface-subtle: #2C2138;
+    --text-primary: #F8F0E8;
+    --text-secondary: #C0B2C9;
+    --text-muted: #8F8296;
+    --border: #45364F;
+    --border-strong: #5A4767;
+
+    --lavender: #B69ADB;
+    --accent: #B69ADB;
+    --lavender-soft: rgba(182, 154, 219, 0.16);
+    --peach: #E8A18C;
+    --peach-soft: rgba(232, 161, 140, 0.16);
+    --sage: #A2BA9D;
+    --sage-soft: rgba(162, 186, 157, 0.16);
+    --plum: #F8F0E8;
+    --terracotta: #E8A18C;
+    --success: #A2BA9D;
+    --error: #C87878;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--canvas);
+    color: var(--text-primary);
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'DM Serif Display', Lora, Georgia, serif;
+    letter-spacing: -0.015em;
+  }
+}
+
+/* Custom scrollbars for clean editorial look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--canvas);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--lavender);
+}
+
+/* Dreamy Animations */
+@keyframes soft-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.02); }
+}
+
+.animate-soft-pulse {
+  animation: soft-pulse 3s ease-in-out infinite;
+}
+
+@keyframes dreamyReveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-dreamy-reveal {
+  animation: dreamyReveal 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.22s ease-out forwards;
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-scaleUp {
+  animation: scaleUp 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Dreamy card elevation & subtle lavender-to-peach gradient highlight on hover */
+.dreamy-card {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease;
+  position: relative;
+}
+
+.dreamy-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(150, 116, 184, 0.6);
+  box-shadow: 0 8px 24px -4px rgba(150, 116, 184, 0.12), 0 2px 8px -1px rgba(233, 166, 142, 0.08);
+}
+
+.dark .dreamy-card:hover {
+  border-color: rgba(182, 154, 219, 0.5);
+  box-shadow: 0 8px 24px -4px rgba(182, 154, 219, 0.16), 0 2px 8px -1px rgba(232, 161, 140, 0.1);
+}
+
+/* ==============================================================
+   PAGE-TO-PAGE DIRECTIONAL TRANSITION ANIMATIONS (350-400ms)
+   ============================================================== */
+
+@keyframes pageExitLeft {
+  0% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(-16px); }
+}
+
+@keyframes pageEnterLeft {
+  0% { opacity: 0; transform: translateX(20px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pageExitRight {
+  0% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(16px); }
+}
+
+@keyframes pageEnterRight {
+  0% { opacity: 0; transform: translateX(-20px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pageExitUp {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-14px); }
+}
+
+@keyframes pageEnterUp {
+  0% { opacity: 0; transform: translateY(18px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pageExitDown {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(14px); }
+}
+
+@keyframes pageEnterDown {
+  0% { opacity: 0; transform: translateY(-18px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pageExitFade {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.985); }
+}
+
+@keyframes pageEnterFade {
+  0% { opacity: 0; transform: scale(0.985); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.animate-page-exit-left { animation: pageExitLeft 0.13s cubic-bezier(0.4, 0, 1, 1) forwards; }
+.animate-page-enter-left { animation: pageEnterLeft 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-page-exit-right { animation: pageExitRight 0.13s cubic-bezier(0.4, 0, 1, 1) forwards; }
+.animate-page-enter-right { animation: pageEnterRight 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-page-exit-up { animation: pageExitUp 0.13s cubic-bezier(0.4, 0, 1, 1) forwards; }
+.animate-page-enter-up { animation: pageEnterUp 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-page-exit-down { animation: pageExitDown 0.13s cubic-bezier(0.4, 0, 1, 1) forwards; }
+.animate-page-enter-down { animation: pageEnterDown 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-page-exit-fade { animation: pageExitFade 0.13s ease-in forwards; }
+.animate-page-enter-fade { animation: pageEnterFade 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+/* Staggered Content Reveals for Headings, Content & Cards */
+.page-header-reveal {
+  animation: pageEnterUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.page-content-reveal {
+  animation: pageEnterUp 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+}
+
+.page-cards-stagger > *:nth-child(1) { animation: pageEnterUp 0.34s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both; }
+.page-cards-stagger > *:nth-child(2) { animation: pageEnterUp 0.34s cubic-bezier(0.16, 1, 0.3, 1) 0.11s both; }
+.page-cards-stagger > *:nth-child(3) { animation: pageEnterUp 0.34s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both; }
+.page-cards-stagger > *:nth-child(4) { animation: pageEnterUp 0.34s cubic-bezier(0.16, 1, 0.3, 1) 0.21s both; }
+.page-cards-stagger > *:nth-child(n+5) { animation: pageEnterUp 0.34s cubic-bezier(0.16, 1, 0.3, 1) 0.26s both; }
+
+/* ==============================================================
+   DISCOVER ACTION CARDS: HOVER LIFT & THEME-AWARE GRADIENT
+   ============================================================== */
+.action-card-dreamy {
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.24s ease, 
+              background 0.24s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-card-dreamy:hover {
+  transform: translateY(-4px);
+  border-color: rgba(150, 116, 184, 0.65);
+  box-shadow: 0 12px 28px -4px rgba(150, 116, 184, 0.18), 0 4px 10px -2px rgba(233, 166, 142, 0.14);
+  background: linear-gradient(135deg, #FFF9F1 0%, #F8EDF4 50%, #EDE6F8 100%);
+}
+
+.dark .action-card-dreamy:hover {
+  border-color: rgba(182, 154, 219, 0.55);
+  box-shadow: 0 12px 28px -4px rgba(169, 138, 219, 0.24), 0 4px 10px -2px rgba(128, 96, 189, 0.18);
+  background: linear-gradient(135deg, #251D30 0%, #2D1F3B 50%, #362248 100%);
+}
+
+.action-card-dreamy:active {
+  transform: scale(0.98) translateY(-2px);
+}
+
+/* ==============================================================
+   SHARED-ELEMENT MODAL TRANSITIONS (ENTER & EXIT)
+   ============================================================== */
+@keyframes modalBackdropIn {
+  from { opacity: 0; backdrop-filter: blur(0px); }
+  to { opacity: 1; backdrop-filter: blur(6px); }
+}
+
+@keyframes modalBackdropOut {
+  from { opacity: 1; backdrop-filter: blur(6px); }
+  to { opacity: 0; backdrop-filter: blur(0px); }
+}
+
+@keyframes modalCardEnter {
+  from { opacity: 0; transform: scale(0.95) translateY(18px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes modalCardExit {
+  from { opacity: 1; transform: scale(1) translateY(0); }
+  to { opacity: 0; transform: scale(0.97) translateY(12px); }
+}
+
+.animate-modal-backdrop-in { animation: modalBackdropIn 0.22s ease-out forwards; }
+.animate-modal-backdrop-out { animation: modalBackdropOut 0.20s ease-in forwards; }
+.animate-modal-card-enter { animation: modalCardEnter 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-modal-card-exit { animation: modalCardExit 0.20s cubic-bezier(0.4, 0, 1, 1) forwards; }
+
+/* ==============================================================
+   ACCESSIBILITY: PREFERS-REDUCED-MOTION
+   ============================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .animate-page-exit-left,
+  .animate-page-enter-left,
+  .animate-page-exit-right,
+  .animate-page-enter-right,
+  .animate-page-exit-up,
+  .animate-page-enter-up,
+  .animate-page-exit-down,
+  .animate-page-enter-down,
+  .animate-page-exit-fade,
+  .animate-page-enter-fade,
+  .page-header-reveal,
+  .page-content-reveal,
+  .page-cards-stagger > *,
+  .action-card-dreamy,
+  .animate-modal-backdrop-in,
+  .animate-modal-backdrop-out,
+  .animate-modal-card-enter,
+  .animate-modal-card-exit {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.001ms !important;
+    transform: none !important;
+  }
+}
