@@ -116,6 +116,7 @@ export interface Badge {
 export interface UserProfile {
   id: string;
   name: string;
+  email?: string;
   tagline: string;
   department: string;
   year: string;

@@ -15,6 +15,7 @@ import {
   INITIAL_NOTIFICATIONS 
 } from '../data/mockData';
 import { getIllustratedAvatar } from '../utils/avatarMap';
+import { deriveDisplayNameFromEmail } from '../utils/userUtils';
 
 interface Toast {
   id: string;
@@ -29,11 +30,11 @@ interface UniHiveContextType {
   introSeen: boolean;
   loginDemoUser: (email: string) => void;
   registerDemoUser: (userData: {
-    name: string;
+    name?: string;
     email: string;
-    college: string;
-    department: string;
-    year: string;
+    college?: string;
+    department?: string;
+    year?: string;
   }) => void;
   logout: () => void;
   replayIntro: () => void;
@@ -90,6 +91,7 @@ const STORAGE_KEYS = {
   OFFERS: 'unihive_offers_v4',
   NOTIFS: 'unihive_notifs_v4',
   AUTH: 'unihive_auth_session_v4',
+  AUTH_EMAIL: 'unihive_auth_email_v4',
   INTRO: 'unihive_intro_seen_v4'
 };
 
@@ -189,9 +191,43 @@ export const UniHiveProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const [userProfile, setUserProfile] = useState<UserProfile>(() => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEYS.PROFILE);
-      if (stored) {
-        const parsed = JSON.parse(stored) as UserProfile;
+      const isAuth = localStorage.getItem(STORAGE_KEYS.AUTH) === 'true';
+      const storedEmail = localStorage.getItem(STORAGE_KEYS.AUTH_EMAIL);
+      const storedProfile = localStorage.getItem(STORAGE_KEYS.PROFILE);
+
+      // Authenticated user's email is the single source of truth
+      if (isAuth && storedEmail) {
+        const derivedName = deriveDisplayNameFromEmail(storedEmail);
+        if (storedProfile) {
+          const parsed = JSON.parse(storedProfile) as UserProfile;
+          return {
+            ...parsed,
+            name: derivedName, // Strictly derived from authenticated email
+            email: storedEmail,
+            avatar: getIllustratedAvatar(parsed.avatar, derivedName)
+          };
+        }
+        return {
+          ...CURRENT_USER,
+          id: 'user_' + storedEmail.replace(/[^a-zA-Z0-9]/g, '_'),
+          name: derivedName,
+          email: storedEmail,
+          avatar: getIllustratedAvatar(null, derivedName)
+        };
+      }
+
+      if (storedProfile) {
+        const parsed = JSON.parse(storedProfile) as UserProfile;
+        const email = parsed.email || storedEmail;
+        if (email) {
+          const derivedName = deriveDisplayNameFromEmail(email);
+          return {
+            ...parsed,
+            name: derivedName,
+            email,
+            avatar: getIllustratedAvatar(parsed.avatar, derivedName)
+          };
+        }
         return {
           ...parsed,
           avatar: getIllustratedAvatar(parsed.avatar, parsed.name)
@@ -317,37 +353,56 @@ export const UniHiveProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   // Auth Controls
-  const loginDemoUser = (_email: string) => {
+  const loginDemoUser = (email: string) => {
+    const cleanEmail = email?.trim() || 'bhadra@campus.edu';
+    const derivedName = deriveDisplayNameFromEmail(cleanEmail);
+
+    const updatedProfile: UserProfile = {
+      ...CURRENT_USER,
+      id: 'user_' + cleanEmail.replace(/[^a-zA-Z0-9]/g, '_'),
+      name: derivedName,
+      email: cleanEmail,
+      avatar: getIllustratedAvatar(null, derivedName),
+      tagline: `Student exploring campus opportunities.`
+    };
+
+    setUserProfile(updatedProfile);
     setIsAuthenticated(true);
     try {
       localStorage.setItem(STORAGE_KEYS.AUTH, 'true');
+      localStorage.setItem(STORAGE_KEYS.AUTH_EMAIL, cleanEmail);
+      localStorage.setItem(STORAGE_KEYS.PROFILE, JSON.stringify(updatedProfile));
     } catch {
       // safe
     }
     setActiveTab('discover');
     addToast({
       type: 'celebrate',
-      title: `Welcome back, ${userProfile.name}!`,
+      title: `Welcome back, ${derivedName}!`,
       message: 'Connected to your campus hive. Explore open requests or share notes.'
     });
   };
 
   const registerDemoUser = (userData: {
-    name: string;
+    name?: string;
     email: string;
-    college: string;
-    department: string;
-    year: string;
+    college?: string;
+    department?: string;
+    year?: string;
   }) => {
+    const cleanEmail = userData.email?.trim() || '';
+    const derivedName = deriveDisplayNameFromEmail(cleanEmail);
+
     const newProfile: UserProfile = {
       ...CURRENT_USER,
       id: 'user_' + Date.now(),
-      name: userData.name,
-      avatar: getIllustratedAvatar(null, userData.name),
-      department: userData.department,
-      year: userData.year,
-      campus: userData.college,
-      tagline: `Student at ${userData.college} exploring ${userData.department}.`,
+      name: derivedName, // Always derive display name from email
+      email: cleanEmail,
+      avatar: getIllustratedAvatar(null, derivedName),
+      department: userData.department || 'Computer Science & Engineering',
+      year: userData.year || '1st Year Undergraduate',
+      campus: userData.college || 'North Campus Hub University',
+      tagline: `Student at ${userData.college || 'North Campus Hub University'} exploring ${userData.department || 'academics'}.`,
       stats: {
         helpsGiven: 0,
         resourcesShared: 0,
@@ -360,6 +415,7 @@ export const UniHiveProvider: React.FC<{ children: ReactNode }> = ({ children })
     setIsAuthenticated(true);
     try {
       localStorage.setItem(STORAGE_KEYS.AUTH, 'true');
+      localStorage.setItem(STORAGE_KEYS.AUTH_EMAIL, cleanEmail);
       localStorage.setItem(STORAGE_KEYS.PROFILE, JSON.stringify(newProfile));
     } catch {
       // safe
@@ -380,7 +436,7 @@ export const UniHiveProvider: React.FC<{ children: ReactNode }> = ({ children })
 
     addToast({
       type: 'celebrate',
-      title: `Welcome to UniHive, ${userData.name}! 🎉`,
+      title: `Welcome to UniHive, ${derivedName}! 🎉`,
       message: 'Your campus profile is ready. You received +50 Welcome Hive Points!'
     });
   };
@@ -389,9 +445,12 @@ export const UniHiveProvider: React.FC<{ children: ReactNode }> = ({ children })
     setIsAuthenticated(false);
     try {
       localStorage.removeItem(STORAGE_KEYS.AUTH);
+      localStorage.removeItem(STORAGE_KEYS.AUTH_EMAIL);
+      localStorage.removeItem(STORAGE_KEYS.PROFILE);
     } catch {
       // safe
     }
+    setUserProfile(CURRENT_USER);
     addToast({
       type: 'info',
       title: 'Logged Out',
@@ -731,6 +790,8 @@ export const UniHiveProvider: React.FC<{ children: ReactNode }> = ({ children })
     localStorage.removeItem(STORAGE_KEYS.PROFILE);
     localStorage.removeItem(STORAGE_KEYS.OFFERS);
     localStorage.removeItem(STORAGE_KEYS.NOTIFS);
+    localStorage.removeItem(STORAGE_KEYS.AUTH);
+    localStorage.removeItem(STORAGE_KEYS.AUTH_EMAIL);
     setPosts(INITIAL_POSTS);
     setUserProfile(CURRENT_USER);
     setHelpOffers(INITIAL_HELP_OFFERS);

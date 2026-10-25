@@ -12,6 +12,7 @@ import {
 export const CURRENT_USER: UserProfile = {
   id: 'user_bhadra',
   name: 'Bhadra',
+  email: 'bhadra@campus.edu',
   tagline: 'Designing thoughtful interfaces & building connected campus communities.',
   department: 'Computer Science & Design',
   year: '3rd Year Undergraduate',

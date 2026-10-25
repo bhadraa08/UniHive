@@ -16,7 +16,7 @@ import {
 interface AuthPageProps {
   onLoginSuccess: (email: string) => void;
   onRegisterSuccess: (userData: {
-    name: string;
+    name?: string;
     email: string;
     college: string;
     department: string;
@@ -46,7 +46,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   };
 
   const handleRegisterSuccess = (userData: {
-    name: string;
+    name?: string;
     email: string;
     college: string;
     department: string;

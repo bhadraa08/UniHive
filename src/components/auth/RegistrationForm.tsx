@@ -4,7 +4,7 @@ import { useTheme } from '../../context/ThemeContext';
 
 interface RegistrationFormProps {
   onSuccess: (userData: {
-    name: string;
+    name?: string;
     email: string;
     college: string;
     department: string;
@@ -20,7 +20,6 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
   const { isDark } = useTheme();
 
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -62,12 +61,6 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
   const validate = () => {
     const errs: Record<string, string> = {};
 
-    if (!formData.name.trim()) {
-      errs.name = 'Full name is required.';
-    } else if (formData.name.trim().length < 3) {
-      errs.name = 'Please enter your full name (at least 3 characters).';
-    }
-
     if (!formData.email.trim()) {
       errs.email = 'University email is required.';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -100,7 +93,6 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
     setTimeout(() => {
       setIsSubmitting(false);
       onSuccess({
-        name: formData.name,
         email: formData.email,
         college: formData.college,
         department: formData.department,
@@ -127,31 +119,6 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-3.5">
-        {/* Full Name */}
-        <div className="space-y-1">
-          <label className="block text-xs font-semibold text-content-primary">
-            Full Name
-          </label>
-          <input
-            type="text"
-            value={formData.name}
-            onChange={e => {
-              setFormData({ ...formData, name: e.target.value });
-              if (errors.name) setErrors({ ...errors, name: '' });
-            }}
-            placeholder="e.g. Jordan Rivera"
-            className={`w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border bg-surface transition-all focus:outline-none focus:ring-2 ${
-              errors.name ? 'border-error focus:ring-error/20' : 'border-borderSubtle focus:border-lavender focus:ring-lavender/20'
-            }`}
-          />
-          {errors.name && (
-            <p className="text-[11px] text-error flex items-center gap-1 font-medium">
-              <AlertCircle className="w-3 h-3 shrink-0" />
-              <span>{errors.name}</span>
-            </p>
-          )}
-        </div>
-
         {/* Email */}
         <div className="space-y-1">
           <label className="block text-xs font-semibold text-content-primary">

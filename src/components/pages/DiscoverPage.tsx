@@ -5,6 +5,7 @@ import { PostCard } from '../cards/PostCard';
 import { EmptyState } from '../common/EmptyState';
 import { CampusIllustration } from '../common/CampusIllustration';
 import { UPCOMING_EVENTS, POPULAR_RESOURCES } from '../../data/mockData';
+import { deriveDisplayNameFromEmail } from '../../utils/userUtils';
 import lightBanner from '../../assets/media_1792557804912_9370e5c5.png';
 import darkBanner from '../../assets/Good_Morning_Bhadra_Dusk.png';
 import { 
@@ -138,7 +139,7 @@ export const DiscoverPage: React.FC = () => {
           {/* Banner Text Floating Cleanly over the Landscape in Both Themes */}
           <div className="relative z-10 px-6 sm:px-8 md:px-10 py-6 max-w-2xl sm:max-w-3xl">
             <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-content-primary font-normal tracking-tight leading-tight">
-              Welcome to your hive, {userProfile.name.split(' ')[0]}
+              Welcome to your hive, {deriveDisplayNameFromEmail(userProfile.email || userProfile.name)} 🐝
             </h1>
             <p className="font-sans text-xs sm:text-sm text-content-primary/80 dark:text-content-secondary mt-1.5 leading-relaxed font-medium">
               Your campus gets better when we help each other.
